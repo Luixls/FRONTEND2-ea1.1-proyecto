@@ -14,7 +14,7 @@ const ListaProductos = ({ productos, filtro, busqueda, onEliminarProducto }) => 
           <div key={producto.id} className="p-4 border rounded-lg">
             <h3 className="text-lg font-bold">{producto.nombre}</h3>
             <p>Categoría: {producto.categoria}</p>
-            <p>Precio: ${producto.precio}</p>
+            <p>Cantidad: {producto.cantidad}</p> {/* Cambiado de Precio a Cantidad */}
             {/* Botón para eliminar producto */}
             <button
               onClick={() => onEliminarProducto(producto.id)}
