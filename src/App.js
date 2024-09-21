@@ -9,28 +9,42 @@ function App() {
   const [busqueda, setBusqueda] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [productos, setProductos] = useState([]);
+  const [productoEditado, setProductoEditado] = useState(null); // Para editar producto
 
-  // Cargar productos desde LocalStorage cuando el componente se monta
   useEffect(() => {
     const productosGuardados = obtenerProductos();
     setProductos(productosGuardados);
   }, []);
 
-  // Función que se llama cuando se agrega un nuevo producto
   const handleProductoAgregado = (nuevoProducto) => {
     const productosActualizados = [...productos, nuevoProducto];
-    setProductos(productosActualizados); // Actualizar el estado con el nuevo producto
-    guardarProductos(productosActualizados); // Guardar en LocalStorage
+    setProductos(productosActualizados); 
+    guardarProductos(productosActualizados); 
     setMensaje('Producto agregado exitosamente');
     setTimeout(() => setMensaje(''), 3000);
   };
 
-  // Función para eliminar un producto
   const handleEliminarProducto = (idProducto) => {
     const productosActualizados = productos.filter(producto => producto.id !== idProducto);
-    setProductos(productosActualizados); // Actualizar el estado sin el producto eliminado
-    guardarProductos(productosActualizados); // Actualizar LocalStorage
+    setProductos(productosActualizados); 
+    guardarProductos(productosActualizados); 
     setMensaje('Producto eliminado exitosamente');
+    setTimeout(() => setMensaje(''), 3000);
+  };
+
+  // Manejar cuando un producto es editado
+  const handleEditarProducto = (producto) => {
+    setProductoEditado(producto); // Establecer el producto actual a editar
+  };
+
+  const handleGuardarEdicion = (productoActualizado) => {
+    const productosActualizados = productos.map(producto =>
+      producto.id === productoActualizado.id ? productoActualizado : producto
+    );
+    setProductos(productosActualizados);
+    guardarProductos(productosActualizados);
+    setMensaje('Producto editado exitosamente');
+    setProductoEditado(null); // Limpiar el producto editado después de guardar
     setTimeout(() => setMensaje(''), 3000);
   };
 
@@ -60,9 +74,20 @@ function App() {
         </select>
       </div>
 
-      {/* Pasamos la lista de productos y la función para eliminar productos */}
-      <FormularioProducto onProductoAgregado={handleProductoAgregado} />
-      <ListaProductos productos={productos} filtro={filtro} busqueda={busqueda} onEliminarProducto={handleEliminarProducto} />
+      {/* Pasamos el producto editado y la función para guardar los cambios */}
+      <FormularioProducto 
+        onProductoAgregado={handleProductoAgregado} 
+        productoEditado={productoEditado} 
+        onGuardarEdicion={handleGuardarEdicion} 
+      />
+
+      <ListaProductos 
+        productos={productos} 
+        filtro={filtro} 
+        busqueda={busqueda} 
+        onEliminarProducto={handleEliminarProducto} 
+        onEditarProducto={handleEditarProducto} 
+      />
     </div>
   );
 }

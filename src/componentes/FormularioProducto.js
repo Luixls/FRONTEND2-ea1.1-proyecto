@@ -1,25 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Producto from '../modelos/Producto';
 
-const FormularioProducto = ({ onProductoAgregado }) => {
+const FormularioProducto = ({ onProductoAgregado, productoEditado, onGuardarEdicion }) => {
   const [nombre, setNombre] = useState('');
-  const [categoria, setCategoria] = useState(''); 
-  const [cantidad, setCantidad] = useState(''); 
+  const [categoria, setCategoria] = useState('');
+  const [cantidad, setCantidad] = useState('');
+
+  // Si estamos editando un producto, llenamos los campos con los valores actuales
+  useEffect(() => {
+    if (productoEditado) {
+      setNombre(productoEditado.nombre);
+      setCategoria(productoEditado.categoria);
+      setCantidad(productoEditado.cantidad);
+    } else {
+      setNombre('');
+      setCategoria('');
+      setCantidad('');
+    }
+  }, [productoEditado]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validar que se ingresen todos los datos
     if (!nombre || !categoria || !cantidad) {
       alert("Por favor, completa todos los campos");
       return;
     }
 
-    // Convertimos el valor de cantidad a un número antes de pasar el producto
-    const nuevoProducto = new Producto(Date.now(), nombre, categoria, Number(cantidad));
-    onProductoAgregado(nuevoProducto); 
+    // Si estamos editando, guardamos los cambios
+    if (productoEditado) {
+      const productoActualizado = { ...productoEditado, nombre, categoria, cantidad: Number(cantidad) };
+      onGuardarEdicion(productoActualizado);
+    } else {
+      // Si no estamos editando, agregamos un nuevo producto
+      const nuevoProducto = new Producto(Date.now(), nombre, categoria, Number(cantidad));
+      onProductoAgregado(nuevoProducto);
+    }
 
-    // Limpiar los campos del formulario
+    // Limpiar los campos
     setNombre('');
     setCategoria('');
     setCantidad('');
@@ -27,7 +45,6 @@ const FormularioProducto = ({ onProductoAgregado }) => {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-gray-100 rounded-lg shadow-md">
-      {/* Campo Categoría (Dropdown) */}
       <div className="mb-4">
         <label className="block text-sm font-bold">Categoría</label>
         <select 
@@ -42,7 +59,6 @@ const FormularioProducto = ({ onProductoAgregado }) => {
         </select>
       </div>
 
-      {/* Campo Nombre */}
       <div className="mb-4">
         <label className="block text-sm font-bold">Nombre</label>
         <input 
@@ -53,7 +69,6 @@ const FormularioProducto = ({ onProductoAgregado }) => {
         />
       </div>
 
-      {/* Campo Cantidad */}
       <div className="mb-4">
         <label className="block text-sm font-bold">Cantidad</label>
         <input 
@@ -64,7 +79,9 @@ const FormularioProducto = ({ onProductoAgregado }) => {
         />
       </div>
 
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">Agregar Producto</button>
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+        {productoEditado ? 'Guardar Cambios' : 'Agregar Producto'}
+      </button>
     </form>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ListaProductos = ({ productos, filtro, busqueda, onEliminarProducto }) => {
+const ListaProductos = ({ productos, filtro, busqueda, onEliminarProducto, onEditarProducto }) => {
 
   const productosFiltrados = productos.filter(producto => 
     producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
@@ -14,7 +14,16 @@ const ListaProductos = ({ productos, filtro, busqueda, onEliminarProducto }) => 
           <div key={producto.id} className="p-4 border rounded-lg">
             <h3 className="text-lg font-bold">{producto.nombre}</h3>
             <p>Categoría: {producto.categoria}</p>
-            <p>Cantidad: {producto.cantidad}</p> {/* Cambiado de Precio a Cantidad */}
+            <p>Cantidad: {producto.cantidad}</p> 
+
+            {/* Botón para editar producto */}
+            <button
+              onClick={() => onEditarProducto(producto)}
+              className="bg-yellow-500 text-white px-4 py-2 rounded mt-2 mr-2"
+            >
+              Editar
+            </button>
+
             {/* Botón para eliminar producto */}
             <button
               onClick={() => onEliminarProducto(producto.id)}
