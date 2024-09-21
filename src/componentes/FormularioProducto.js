@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Producto from '../modelos/Producto';
-import { guardarProductos, obtenerProductos } from '../utilidades/almacenamiento';
 
 const FormularioProducto = ({ onProductoAgregado }) => {
   const [nombre, setNombre] = useState('');
@@ -11,11 +10,9 @@ const FormularioProducto = ({ onProductoAgregado }) => {
     e.preventDefault();
 
     const nuevoProducto = new Producto(Date.now(), nombre, categoria, precio);
-    const productosExistentes = obtenerProductos();
-    productosExistentes.push(nuevoProducto);
-    guardarProductos(productosExistentes);
+    onProductoAgregado(nuevoProducto); // Pasamos el nuevo producto a App.js
 
-    onProductoAgregado();
+    // Limpiar los campos del formulario
     setNombre('');
     setCategoria('');
     setPrecio('');

@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { obtenerProductos } from '../utilidades/almacenamiento';
+import React from 'react';
 
-const ListaProductos = ({ filtro, busqueda }) => {
-  const [productos, setProductos] = useState([]);
-
-  useEffect(() => {
-    const productosGuardados = obtenerProductos();
-    setProductos(productosGuardados);
-  }, []);
+const ListaProductos = ({ productos, filtro, busqueda, onEliminarProducto }) => {
 
   const productosFiltrados = productos.filter(producto => 
     producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
@@ -16,13 +9,24 @@ const ListaProductos = ({ filtro, busqueda }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {productosFiltrados.map(producto => (
-        <div key={producto.id} className="p-4 border rounded-lg">
-          <h3 className="text-lg font-bold">{producto.nombre}</h3>
-          <p>Categoría: {producto.categoria}</p>
-          <p>Precio: ${producto.precio}</p>
-        </div>
-      ))}
+      {productosFiltrados.length > 0 ? (
+        productosFiltrados.map(producto => (
+          <div key={producto.id} className="p-4 border rounded-lg">
+            <h3 className="text-lg font-bold">{producto.nombre}</h3>
+            <p>Categoría: {producto.categoria}</p>
+            <p>Precio: ${producto.precio}</p>
+            {/* Botón para eliminar producto */}
+            <button
+              onClick={() => onEliminarProducto(producto.id)}
+              className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+            >
+              Eliminar
+            </button>
+          </div>
+        ))
+      ) : (
+        <p>No se encontraron productos.</p>
+      )}
     </div>
   );
 };
