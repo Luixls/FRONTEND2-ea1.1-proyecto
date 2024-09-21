@@ -54,7 +54,7 @@ function App() {
           onChange={(e) => setFiltro(e.target.value)}
         >
           <option value="">Todas las categorías</option>
-          <option value="Electronica">Electrónica</option>
+          <option value="Electrónica">Electrónica</option>
           <option value="Ropa">Ropa</option>
           <option value="Hogar">Hogar</option>
         </select>
